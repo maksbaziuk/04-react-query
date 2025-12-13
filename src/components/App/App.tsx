@@ -13,13 +13,13 @@ import ReactPaginate from "react-paginate";
 
 function App() {
   const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
-  const [query, setQuery] = useState<string | null>(null);
-  const [page, setPage] = useState(0);
+  const [query, setQuery] = useState<string>("");
+  const [page, setPage] = useState(1);
 
   const { data, error, isLoading } = useQuery({
     queryKey: ["movies", query, page],
     queryFn: () => fetchMovies(query as string, page),
-    enabled: query !== null,
+    enabled: query.trim() !== "",
     placeholderData: keepPreviousData,
   });
 
@@ -32,7 +32,7 @@ function App() {
     if (data && data.results.length === 0) {
       toast.error("No movies found for your request.");
     }
-  });
+  }, [data]);
 
   const openModal = (movie: Movie) => {
     setSelectedMovie(movie);
